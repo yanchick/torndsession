@@ -29,8 +29,11 @@ class RedisSession(SessionDriver):
         session_data = self.client.get(session_id)
         if not session_data:
             return {}
-        return pickle.loads(session_data)
-
+        try:
+            return pickle.loads(session_data)
+        except:
+            return pickle.loads(session_data, encoding='bytes')
+          
     def save(self, session_id, session_data, expires=None):
         session_data = session_data if session_data else {}
         if expires:
